@@ -1,0 +1,43 @@
+Material,Synthesis,Electrolyte,Capacitance,Scan Rate (mV/s),Current Density (A/g)
+Ti3C2Tx MXene,Clay method,1M H2SO4,245,2,NaN
+Ti3C2Tx MXene,Hydrothermal,1M H2SO4,314,2,NaN
+Ti3C2Tx MXene,Hydrothermal,1M H2SO4,254,1,NaN
+Ti3C2Tx MXene,HF,1M H2SO4,325,2,NaN
+GaOH/Ti3C2,Hydrothermal,1M H2SO4,542,NaN,0.5
+CuS/Ti3C2,Hydrothermal,1 M KOH,957.36,NaN,1
+NiCoS/Ti3C2,Hydrothermal,2M KOH,2544,NaN,1
+CoS2/CuCo2S4/Ti3C2,Hydrothermal,1M Na2SO4,706.5,NaN,1
+Ni1Co1 MOF/Ti3C2Tx,Unknown,KOH,1493.6,NaN,1
+Nickel cobalt phosphate/Ti3C2/WS2,Hydrothermal,2 M KOH,1020,NaN,1
+iCo-LDH/Mo2TiC2Tx,2step solvothermal,3M KOH,2169.9,NaN,0.5
+Ti3C2/MnO2/Ag,Hydrothermal & in-situ,3M KOH,880,NaN,2
+NiCoMoO4/Ti3C2Tx,Co precipitation method,3M KOH,1900,NaN,1
+Ti3C2Tx/rGO/W18O49,Vacuum assisted filtration,H2SO4,581.2,NaN,1
+Ni-MOF/Ti3C2Tx,Hydrothermal and electrostatic interaction,3 M KOH,1160.5,NaN,1
+Ti3C2Tx/WS2,Hydrothermal,1M H2SO4,373,NaN,0.4
+PPy/Ti3C2/Gum arabic,Inverse emulsion polymerization,1M H2SO4,657.64,NaN,1
+MnCo2O4/Ti3C2Tx,Hydrothermal,3M KOH,860.22,NaN,2
+Au NPs/Ti3C2Tx,Electrostatic interactions,3M H2SO4,332,NaN,1
+NiCo2O4/Nb2CTx,Hydrothermal and calcination,6M KOH,1873,NaN,1
+OH-WCNT/Nb2CTx,Ultrasonication (Physical mixing),1M H2SO4,63.9,NaN,0.5
+Ni-Co-Se/ Ti3C2Tx composite,Hydrothermal and selenyzation,3M KOH,1832.4,NaN,1
+Ti3C2Tx@NiCo-LDH/Co9S8,Co-precipitation and in-situ vulcanization,Unknown,808,NaN,1
+Ti3C2Tx/Ppy,Co-electrodepostition,1M H2SO4,416,NaN,0.5
+Ti3C2Tx/Ni-Co@Ni-Co MOF @nickel foam,Solution method &Electrodeposition,3M KOH,1577.5,NaN,10
+WS2/MoO3/Ti3C2Tx,Hydrothermal and ultrasonication,1M KOH,1241,NaN,1
+Ti3C2Tx/copper-phthalocyanin(CPN),Ultrasonication of MXene and CPN,1M H2SO4,786.1,NaN,0.5
+NiCo2S4/Ti3C2Tx,Hydrothermal,2M KOH,2637,NaN,2.5
+Fe-Cu MOF/TI3C2Tx,Co-precipitation ,6M KOH,758.9,NaN,1
+Ti3C2Tx (MXene)/CoS2/CuCo2S4,Hydrothermal,1 M TEABF4/DMSO,706.5,NaN,1
+NiCo LDH@Ti3C2Tx,Solvent-induced interfacial-confined strategy,2M KOH,1310,NaN,1
+NiFe LDH@Ti3C2Tx,Hydrothermal,1M KOH,720.2,NaN,1
+Fe3 O4 /MXene/RGO,Chemical oxidation method,5M LiCl,45.8,NaN,0.2
+Fe3 O4 /MXene,Chemical oxidation method,5M LiCl,35.6,NaN,0.2
+CuS@Ti3C2Tx,Solvothermal,1M KOH,957.36,NaN,1
+NiCo2O4/Ti3C2Tx,Hydrothermal,6M KOH,1633,NaN,1
+NiCoS/Ti3C2,Hydrothermal,2M KOH,2544.1,NaN,1
+WS2/NiCo(PO4)3/Ti3C2Tx,Probe sonication,2M KOH,1020,NaN,1
+NiCo(PO4)3/Ti3C2Tx,Probe sonication,2M KOH,847,NaN,1
+Nickel oxide/Ti3C2Tx,Hydrothermal,3M KOH,248,NaN,2
+Ti3C2Tx@MnFeO3,Hydrothermal,1M KOH,1130,NaN,1
+NiCo-LDH/Ti3C2Tx/Graphene oxide sheets,Unknown,6M KOH,1633,NaN,1
