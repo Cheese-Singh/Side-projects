@@ -14,6 +14,11 @@ A collection of technical explorations and utility scripts.
 * **Focus:** REST API integration with OpenAlex, session handling, and data visualization.
 * **Stack:** `requests`, `matplotlib`, `OpenAlex API`
 
+### [catboost-loocv-regression](./catboost_loocv_regression.py)
+* **Description:** CatBoost regression model to predict supercapacitor capacitance (F/g) from material and synthesis features.
+* **Focus:** Handling small datasets with LOOCV, native categorical feature support, and diagnostic plot generation.
+* **Stack:** `catboost`, `scikit-learn`, `pandas`, `matplotlib`
+
 ---
 
 ## Technical Objectives
