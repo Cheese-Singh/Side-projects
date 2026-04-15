@@ -14,6 +14,17 @@ A collection of technical explorations and utility scripts.
 
 ---
 
+### [Ollama-Series](./Ollama%20Series/)
+* **Description:** Progressive exploration of local LLM inference and interaction patterns using the Ollama runtime.
+* **Focus:** From basic generation to multimodal input and stateful multi-turn conversation with history management.
+* **Files:**
+  - `01_ollama_basic_generate.py` → Single-turn text generation using `ollama.chat()` with streaming output
+  - `02_ollama_image_input.py` → Multimodal input handling with image encoding and vision-language models
+  - `03_ollama_chat_with_history.py` → Multi-turn chat with persistent history, command handling (clear/history/exit), think-block stripping, and repetition loop prevention
+* **Stack:** `ollama`, `python`
+
+---
+
 ### [research-trend-analyzer](./research-trend-analyzer.py)
 * **Description:** Automated tool for tracking scientific publication volume over time.
 * **Focus:** REST API integration with OpenAlex, session handling, and data visualization.
