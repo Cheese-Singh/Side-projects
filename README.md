@@ -16,12 +16,13 @@ A collection of technical explorations and utility scripts.
 
 ### [Ollama-Series](./Ollama%20Series/)
 * **Description:** Progressive exploration of local LLM inference and interaction patterns using the Ollama runtime.
-* **Focus:** From basic generation to multimodal input and stateful multi-turn conversation with history management.
+* **Focus:** From basic generation to multimodal input, stateful conversation, and agentic tool-use with function calling.
 * **Files:**
   - `01_ollama_basic_generate.py` → Single-turn text generation using `ollama.chat()` with streaming output
   - `02_ollama_image_input.py` → Multimodal input handling with image encoding and vision-language models
   - `03_ollama_chat_with_history.py` → Multi-turn chat with persistent history, command handling (clear/history/exit), think-block stripping, and repetition loop prevention
-* **Stack:** `ollama`, `python`
+  - `04_ollama_with_tools.py` → Agentic tool-use loop with function calling; manages a CSV-backed inventory (check, add, update, save) with error handling and multi-step reasoning
+* **Stack:** `ollama`, `pandas`, `python`
 
 ---
 
