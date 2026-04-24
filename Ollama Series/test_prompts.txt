@@ -1,0 +1,24 @@
+Explain this Python error:
+ModuleNotFoundError: No module named 'catboost'
+
+---
+Write a Python function to find the largest of 3 numbers.
+
+---
+Debug this:
+for i in range(5)
+    print(i)
+
+---
+Write a Git commit message for adding a CLI tool that manages an Ollama Modelfile and evaluates prompts.
+
+---
+Summarize this:
+A study uses Random Forest on 45 MXene samples to predict capacitance using synthesis and electrolyte features.
+
+---
+Explain why this SQL query is wrong:
+SELECT * FROM users WHERE id = NULL;
+
+---
+Create a README section explaining that this model works offline and has no internet access.
