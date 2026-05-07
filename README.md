@@ -22,6 +22,7 @@ A collection of technical explorations and utility scripts.
   - `02_ollama_image_input.py` → Multimodal input handling with image encoding and vision-language models
   - `03_ollama_chat_with_history.py` → Multi-turn chat with persistent history, command handling (clear/history/exit), think-block stripping, and repetition loop prevention
   - `04_ollama_with_tools.py` → Agentic tool-use loop with function calling; manages a CSV-backed inventory (check, add, update, save) with error handling and multi-step reasoning
+  -   - `05_ollama_cli.py` → Command-line interface for Modelfile lifecycle management and offline LLM evaluation; includes model validation, automated creation, interactive chat loop, and structured prompt benchmarking with report generation
 * **Stack:** `ollama`, `pandas`, `python`
 
 ---
