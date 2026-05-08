@@ -26,3 +26,11 @@ sdist/
 var/
 wheels/
 *.egg-info/
+
+# Generated audio files
+prompt.wav
+prompt.mp3
+*.wav
+*.mp3
+*.m4a
+*.oga
