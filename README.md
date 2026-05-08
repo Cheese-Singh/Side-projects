@@ -6,12 +6,14 @@ A collection of technical explorations and utility scripts.
 
 ### [MLX-Series](./MLX%20Series/)
 * **Description:** Progressive exploration of the MLX framework for running and understanding machine learning models on Apple Silicon.
-* **Focus:** From tensor operations and manual embeddings to local LLM inference using quantized models.
+* **Focus:** From tensor operations and manual embeddings to local LLM inference, chat loops, and voice-based interaction using quantized models.
 * **Files:**
+  - `requirements.txt` → Python dependencies required for MLX inference, MLX-VLM, Whisper transcription, and audio recording
   - `A1_mlx_basics.py` → Tensor operations, vectorization, manual tokenization, and embedding layer implementation
   - `A2_mlx_llm_inference.py` → Running a local Qwen3.5-9B model using MLX with configurable inference parameters
-  - `A3_mlx_chat_with_history.py` → Runnign a local Qwen3.5-9B model through MLX while maintaining chat history 
-* **Stack:** `mlx`, `mlx-vlm`, `python`
+  - `A3_mlx_chat_with_history.py` → Running a local Qwen3.5-9B model through MLX while maintaining chat history
+  - `A4_voice_qwen_assistant.py` → Voice-to-LLM assistant pipeline: records audio, transcribes speech using Whisper, and generates responses using Qwen3.5-9B through MLX-VLM
+* **Stack:** `mlx`, `mlx-vlm`, `transformers`, `torch`, `pyaudio`, `python`
 
 ---
 
