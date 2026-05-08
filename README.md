@@ -30,24 +30,25 @@ A collection of technical explorations and utility scripts.
 
 ---
 
-### [research-trend-analyzer](./research-trend-analyzer.py)
-* **Description:** Automated tool for tracking scientific publication volume over time.
-* **Focus:** REST API integration with OpenAlex, session handling, and data visualization.
-* **Stack:** `requests`, `matplotlib`, `OpenAlex API`
+### [Research ML](./Research%20ML/)
+* **Description:** Research-oriented machine learning and analytics workflows for materials science and scientific literature analysis.
+* **Focus:** Small-dataset regression, supercapacitor capacitance prediction, LOOCV evaluation, diagnostic plotting, and OpenAlex-based publication trend analysis.
+* **Files:**
+  - `catboost_loocv_regression.py` → Trains a CatBoost regression model to predict supercapacitor capacitance (F/g) using material, synthesis, and electrolyte features; evaluates performance with Leave-One-Out Cross-Validation and generates diagnostic plots
+  - `research-trend-analyzer.py` → Queries the OpenAlex API to track yearly publication volume for a selected research topic and visualizes the trend using a bar chart
+  - `datasets/` → Stores the capacitance dataset used for regression modeling
+  - `plots/` → Stores generated evaluation plots such as actual-vs-predicted, residual distribution, error histogram, and feature importance
+* **Stack:** `python`, `pandas`, `numpy`, `catboost`, `scikit-learn`, `matplotlib`, `requests`, `OpenAlex API`
 
----
-
-### [catboost-loocv-regression](./catboost_loocv_regression.py)
-* **Description:** CatBoost regression model to predict supercapacitor capacitance (F/g) from material and synthesis features.
-* **Focus:** Handling small datasets with LOOCV, native categorical feature support, and diagnostic plot generation.
-* **Stack:** `catboost`, `scikit-learn`, `pandas`, `matplotlib`
 ---
 
 ## Technical Objectives
 
 This repository documents:
-- Hands-on exploration of new frameworks (e.g., MLX)
-- Progression from low-level numerical operations to applied AI systems
-- Development of small, focused tools for data-driven workflows
+- Hands-on exploration of new AI/ML frameworks such as MLX for Apple Silicon inference
+- Progression from low-level numerical operations to applied local LLM and voice-assistant systems
+- Development of research-oriented ML workflows for small scientific datasets
+- Use of external APIs for data-driven research trend analysis
+- Emphasis on reproducible, modular scripts with clear inputs, outputs, and generated plots
 
-Each module represents a step toward building more complex systems, with an emphasis on understanding underlying mechanics rather than relying solely on high-level abstractions.
+Each module represents a step toward building more complex AI systems, combining practical implementation with an understanding of the underlying mechanics rather than relying solely on high-level abstractions.
