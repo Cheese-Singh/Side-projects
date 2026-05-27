@@ -13,8 +13,9 @@ A collection of technical explorations and utility scripts.
   - `A2_mlx_llm_inference.py` → Running a local Qwen3.5-9B model using MLX with configurable inference parameters
   - `A3_mlx_chat_with_history.py` → Running a local Qwen3.5-9B model through MLX while maintaining chat history
   - `A4_voice_qwen_assistant.py` → Voice-to-LLM assistant pipeline: records audio, transcribes speech using Whisper, and generates responses using Qwen3.5-9B through MLX-VLM
-  - `A5_mlx_with_tools.py` → Demonstrates lightweight local tool-use with MLX by combining structured JSON tool-call prompting, fallback command parsing, persistent task storage using CSV, and sandboxed file operations such as create, read, and delete.
-* **Stack:** `mlx`, `mlx-vlm`, `transformers`, `torch`, `pyaudio`, `python`, `whisper`
+  - `A5_mlx_with_tools.py` → Lightweight tool-use with structured JSON tool-call prompting, CSV-backed task storage, and sandboxed file operations.
+  - `A6_mlx_tts.py` → Voice assistant with Qwen3.5-9B and Kokoro-82M TTS; maintains chat history, strips think blocks, and streams audio sentence-by-sentence for low latency.
+* **Stack:** `mlx`, `mlx-vlm`, `mlx-audio`, `transformers`, `torch`, `pyaudio`, `python`, `whisper`
 
 ---
 
