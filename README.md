@@ -15,7 +15,8 @@ A collection of technical explorations and utility scripts.
   - `A4_voice_qwen_assistant.py` → Voice-to-LLM assistant pipeline: records audio, transcribes speech using Whisper, and generates responses using Qwen3.5-9B through MLX-VLM
   - `A5_mlx_with_tools.py` → Lightweight tool-use with structured JSON tool-call prompting, CSV-backed task storage, and sandboxed file operations.
   - `A6_mlx_tts.py` → Voice assistant with Qwen3.5-9B and Kokoro-82M TTS; maintains chat history, strips think blocks, and streams audio sentence-by-sentence for low latency.
-* **Stack:** `mlx`, `mlx-vlm`, `mlx-audio`, `transformers`, `torch`, `pyaudio`, `python`, `whisper`
+  - `A7_mlx_whisper.py` → VAD-based voice pipeline: silence-aware recording, Whisper transcription, and Qwen3.5-9B response generation.
+* **Stack:** `mlx`, `mlx-vlm`, `mlx-audio`, `mlx-whisper`, `transformers`, `torch`, `pyaudio`, `python`, `whisper`
 
 ---
 
