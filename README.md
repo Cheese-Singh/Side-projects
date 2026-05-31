@@ -6,7 +6,7 @@ A collection of technical explorations and utility scripts.
 
 ### [MLX-Series](./MLX%20Series/)
 * **Description:** Progressive exploration of the MLX framework for running and understanding machine learning models on Apple Silicon.
-* **Focus:** From tensor operations and manual embeddings to local LLM inference, chat loops, and voice-based interaction using quantized models.
+* **Focus:** From tensor operations and manual embeddings to a fully voice-driven agentic assistant with on-device inference, macOS system control, and real-time audio I/O.
 * **Files:**
   - `requirements.txt` → Python dependencies required for MLX inference, MLX-VLM, Whisper transcription, and audio recording
   - `A1_mlx_basics.py` → Tensor operations, vectorization, manual tokenization, and embedding layer implementation
@@ -17,7 +17,9 @@ A collection of technical explorations and utility scripts.
   - `A6_mlx_tts.py` → Voice assistant with Qwen3.5-9B and Kokoro-82M TTS; maintains chat history, strips think blocks, and streams audio sentence-by-sentence for low latency.
   - `A7_mlx_whisper.py` → VAD-based voice pipeline: silence-aware recording, Whisper transcription, and Qwen3.5-9B response generation.
   - `A8_mlx_voice_loop.py` → Full duplex voice assistant: VAD recording, Whisper transcription, Qwen3.5-9B generation, and Kokoro-82M sentence-streamed TTS output.
-* **Stack:** `mlx`, `mlx-vlm`, `mlx-audio`, `mlx-whisper`, `transformers`, `torch`, `pyaudio`, `python`, `whisper`
+  - `A9_mlx_system_agent.py` → Agentic macOS control: dynamic tool registration, AppleScript-driven app and music control, and web search with context-augmented LLM responses.
+  - `A10_mlx_voice_agent.py` → Complete voice-driven system agent: VAD recording, MLX-Whisper transcription, Qwen3.5-9B tool-calling, macOS control, and Kokoro-82M TTS output. No keyboard input required.
+* **Stack:** `mlx`, `mlx-vlm`, `mlx-audio`, `mlx-whisper`, `transformers`, `torch`, `pyaudio`, `python`, `whisper`, `sounddevice`, `beautifulsoup4`, `requests`, `ddgs`
 
 ---
 
