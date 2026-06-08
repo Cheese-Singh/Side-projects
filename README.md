@@ -9,15 +9,15 @@ A collection of technical explorations and utility scripts.
 * **Focus:** From tensor operations and manual embeddings to a fully voice-driven agentic assistant with on-device inference, macOS system control, and real-time audio I/O.
 * **Files:**
   - `requirements.txt` → Python dependencies required for MLX inference, MLX-VLM, Whisper transcription, and audio recording
-  - `A1_mlx_basics.py` → Tensor operations, vectorization, manual tokenization, and embedding layer implementation
-  - `A2_mlx_llm_inference.py` → Running a local Qwen3.5-9B model using MLX with configurable inference parameters
-  - `A3_mlx_chat_with_history.py` → Running a local Qwen3.5-9B model through MLX while maintaining chat history
-  - `A4_voice_qwen_assistant.py` → Voice-to-LLM assistant pipeline: records audio, transcribes speech using Whisper, and generates responses using Qwen3.5-9B through MLX-VLM
-  - `A5_mlx_with_tools.py` → Lightweight tool-use with structured JSON tool-call prompting, CSV-backed task storage, and sandboxed file operations.
-  - `A6_mlx_tts.py` → Voice assistant with Qwen3.5-9B and Kokoro-82M TTS; maintains chat history, strips think blocks, and streams audio sentence-by-sentence for low latency.
-  - `A7_mlx_whisper.py` → VAD-based voice pipeline: silence-aware recording, Whisper transcription, and Qwen3.5-9B response generation.
-  - `A8_mlx_voice_loop.py` → Full duplex voice assistant: VAD recording, Whisper transcription, Qwen3.5-9B generation, and Kokoro-82M sentence-streamed TTS output.
-  - `A9_mlx_system_agent.py` → Agentic macOS control: dynamic tool registration, AppleScript-driven app and music control, and web search with context-augmented LLM responses.
+  - `A01_mlx_basics.py` → Tensor operations, vectorization, manual tokenization, and embedding layer implementation
+  - `A02_mlx_llm_inference.py` → Running a local Qwen3.5-9B model using MLX with configurable inference parameters
+  - `A03_mlx_chat_with_history.py` → Running a local Qwen3.5-9B model through MLX while maintaining chat history
+  - `A04_voice_qwen_assistant.py` → Voice-to-LLM assistant pipeline: records audio, transcribes speech using Whisper, and generates responses using Qwen3.5-9B through MLX-VLM
+  - `A05_mlx_with_tools.py` → Lightweight tool-use with structured JSON tool-call prompting, CSV-backed task storage, and sandboxed file operations.
+  - `A06_mlx_tts.py` → Voice assistant with Qwen3.5-9B and Kokoro-82M TTS; maintains chat history, strips think blocks, and streams audio sentence-by-sentence for low latency.
+  - `A07_mlx_whisper.py` → VAD-based voice pipeline: silence-aware recording, Whisper transcription, and Qwen3.5-9B response generation.
+  - `A08_mlx_voice_loop.py` → Full duplex voice assistant: VAD recording, Whisper transcription, Qwen3.5-9B generation, and Kokoro-82M sentence-streamed TTS output.
+  - `A09_mlx_system_agent.py` → Agentic macOS control: dynamic tool registration, AppleScript-driven app and music control, and web search with context-augmented LLM responses.
   - `A10_mlx_voice_agent.py` → Complete voice-driven system agent: VAD recording, MLX-Whisper transcription, Qwen3.5-9B tool-calling, macOS control, and Kokoro-82M TTS output. No keyboard input required.
 * **Stack:** `mlx`, `mlx-vlm`, `mlx-audio`, `mlx-whisper`, `transformers`, `torch`, `pyaudio`, `python`, `whisper`, `sounddevice`, `beautifulsoup4`, `requests`, `ddgs`
 
