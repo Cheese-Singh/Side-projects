@@ -48,6 +48,15 @@ A collection of technical explorations and utility scripts.
 
 ---
 
+### [Mini](./Mini/)
+* **Description:** Small, self-contained utility applications exploring on-device ML pipelines and native macOS/iOS interfaces.
+* **Focus:** Rapid prototyping of end-to-end AI-powered tools with real hardware integration, local inference backends, and native Swift frontends.
+* **Files:**
+  - `VoiceSummariser/` → macOS SwiftUI app with a FastAPI backend; records microphone audio, transcribes speech using MLX-Whisper (distil-large-v3), and generates a concise summary using Qwen3.5-9B via MLX-VLM. Full on-device inference with no external API calls.
+* **Stack:** `swift`, `swiftui`, `avfoundation`, `fastapi`, `mlx-whisper`, `mlx-vlm`, `ffmpeg`, `python`
+
+---
+
 ## Technical Objectives
 
 This repository documents:
