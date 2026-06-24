@@ -19,6 +19,7 @@ A collection of technical explorations and utility scripts.
   - `A08_mlx_voice_loop.py` → Full duplex voice assistant: VAD recording, Whisper transcription, Qwen3.5-9B generation, and Kokoro-82M sentence-streamed TTS output.
   - `A09_mlx_system_agent.py` → Agentic macOS control: dynamic tool registration, AppleScript-driven app and music control, and web search with context-augmented LLM responses.
   - `A10_mlx_voice_agent.py` → Complete voice-driven system agent: VAD recording, MLX-Whisper transcription, Qwen3.5-9B tool-calling, macOS control, and Kokoro-82M TTS output. No keyboard input required.
+  - `A11_Gwen.py` → a Siri-esque agentic voice assistant with advanced capabilities. Uses Qwen3.5-9B model for complex tasks and Qwen2.5-1.5B for smaller tasks for quicker responses. Includes SQLite for global user state + latency logs + web search cache with semantic dedup + session summaries, and ChromaDB for semantic memory store + retrieval. Versioned auto-update logic for global state.
 * **Stack:** `mlx`, `mlx-vlm`, `mlx-audio`, `mlx-whisper`, `transformers`, `torch`, `pyaudio`, `python`, `whisper`, `sounddevice`, `beautifulsoup4`, `requests`, `ddgs`
 
 ---
