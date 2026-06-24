@@ -64,12 +64,13 @@ EXIT_PHRASES = {
 }
 
 FORCE_SEARCH_PATTERNS = [
-    r"\b(world cup|premier league|champions league|nba|nfl|ipl)\b",
+    r"\b(world cup|premier league|champions league|nba|nfl)\b",
     r"\b(score|standings|match|tournament|who (won|is winning|is leading))\b",
     r"\b(price|stock|weather|news|latest|current|right now|today)\b",
     r"\b(born on|birthday|who is|how old is|when did|what year)\b",
     r"b(travel time|distance|travel|cost)"
 ]
+
 # ----------------
 # DATABASE SETUP
 # -----------------
@@ -391,6 +392,7 @@ def classify_complexity(query: str) -> str:
     for pattern in SIMPLE_QUESTION_PATTERNS:
         if re.match(pattern, q, re.IGNORECASE):
             return "simple"
+        
     complex_signals = [
         "explain", "why", "how does", "compare", "difference between",
         "write", "code", "implement", "design", "analyze", "summarize",
