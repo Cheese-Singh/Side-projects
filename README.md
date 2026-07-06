@@ -22,8 +22,9 @@ A collection of technical explorations and utility scripts.
   - `A11_Gwen.py` → a Siri-esque agentic voice assistant with advanced capabilities. Uses Qwen3.5-9B model for complex tasks and Qwen2.5-1.5B for smaller tasks for quicker responses. Includes SQLite for global user state + latency logs + web search cache with semantic dedup + session summaries, and ChromaDB for semantic memory store + retrieval. Versioned auto-update logic for global state.
   - `A12_new_additions.py` → Includes individual tools that will be added onto A11_Gwen for the final prototype. Includes smoother beep sounds, new activation phrases, voice-text mode switches, and interrupting Gwen for more natural to-and-fro conversations.
   - `A13_file_generation_and_reading.py` → Includes image, pdf, word document generation and reading capabilities. Will be added onto A11_Gwen in the final version.
-  - `A14_VoiceGate.py`, `A14_VoiceGate_session.py` → Used sounddevice and soundfile to store voice inputs. Used speechbrain for SpeakerRecognition.
-* **Stack:** `mlx`, `mlx-vlm`, `mlx-audio`, `mlx-whisper`, `transformers`, `torch`, `pyaudio`, `python`, `whisper`, `sounddevice`, `soundfile`, `beautifulsoup4`, `requests`, `ddgs`, `mflux`, `fitz`, `speechbrain`
+  - `A14_VoiceGate.py`, `A14_VoiceGate_session.py` → Uses sounddevice and soundfile to store voice inputs. Also uses speechbrain for SpeakerRecognition.
+  - `A15_Four_Tier.py` → Uses Ollama to integrate larger LLMs through cloud for deeper, well-sought responses. Introduces a 4-tier model architecture, featuring a very light model (Qwen2.5:1.5B), light model (Qwen3.5:9B), regular/default model (Gemma4b:cloud), and a MAX model (kimi-k2.7-code:cloud). 
+* **Stack:** `mlx`, `mlx-vlm`, `mlx-audio`, `mlx-whisper`, `transformers`, `torch`, `pyaudio`, `python`, `whisper`, `sounddevice`, `soundfile`, `beautifulsoup4`, `requests`, `ddgs`, `mflux`, `fitz`, `speechbrain`, `ollama`
 
 ---
 
