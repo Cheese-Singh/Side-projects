@@ -22,7 +22,7 @@ def record_clip(path, seconds=5):
 # ONE-TIME ENROLLMENT
 # --------------------
 
-def run_enrollment(enrollment_dir=None, live_count=12):
+def run_enrollment(enrollment_dir=None, live_count=30):
     if enrollment_dir:
         wav_paths = sorted(Path(enrollment_dir).glob("*.wav"))
     else:

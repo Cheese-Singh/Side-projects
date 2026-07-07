@@ -68,7 +68,7 @@ FORCE_SEARCH_PATTERNS = [
     r"\b(score|standings|match|tournament|who (won|is winning|is leading))\b",
     r"\b(price|stock|weather|news|latest|current|right now|today)\b",
     r"\b(born on|birthday|who is|how old is|when did|what year)\b",
-    r"b(travel time|distance|travel|cost)"
+    r"\b(travel time|distance|travel|cost)\b"
 ]
 
 # ----------------
