@@ -23,9 +23,10 @@ import ollama
 import requests
 import sounddevice as sd
 from mlx_lm import load as load_lm, generate as generate_lm
-from audio_utils import play_audio, select_audio_device
+from audio_utils import play_audio, select_audio_device, get_device_default_rate
 from mlx_lm.sample_utils import make_sampler, make_logits_processors
 from mlx_vlm import load as load_vlm, generate as generate_vlm
+from aec_processor import EchoCanceller
 
 try:
     from bs4 import BeautifulSoup
@@ -124,7 +125,6 @@ except Exception as e:
 # ------
 
 def _signal_handler(signum, frame):
-    """Handle signals gracefully."""
     try:
         sd.stop()
     except Exception:
@@ -162,6 +162,9 @@ WAKE_TIMEOUT = 30.0
 CACHE_TTL_HOURS = 6
 VLM_MAX_TOKENS = 512
 
+INTERRUPT_RMS_THRESHOLD = 0.045
+INTERRUPT_SUSTAIN_BLOCKS = 4
+INTERRUPT_WARMUP_SECONDS = 0.15 
 
 # --------
 # LOGGING
@@ -444,25 +447,31 @@ class ModelRouter:
 
 
 router = ModelRouter()
-
+echo_canceller = EchoCanceller(stream_delay_ms=50)
+if echo_canceller.enabled:
+    print("[AEC] Acoustic echo cancellation enabled (WebRTC AEC3).")
+else:
+    print("[AEC] Unavailable — using threshold-only barge-in detection.")
 
 # ----------------------------
 # MANUAL MODEL-TIER SELECTION
 # ----------------------------
 
 class ModelModeController:
-    PHRASE_TO_TIER = {
-        "very light": ModelTier.VERY_LIGHT,
-        "very light mode": ModelTier.VERY_LIGHT,
-        "light": ModelTier.LIGHT,
-        "light mode": ModelTier.LIGHT,
-        "regular": ModelTier.REGULAR,
-        "regular mode": ModelTier.REGULAR,
-        "default mode": ModelTier.REGULAR,
-        "max": ModelTier.MAX,
-        "max mode": ModelTier.MAX,
-        "high mode": ModelTier.MAX,
-    }
+    TIER_KEYWORDS: list[tuple[str, ModelTier]] = [
+        ("very light", ModelTier.VERY_LIGHT),
+        ("regular", ModelTier.REGULAR),
+        ("default", ModelTier.REGULAR),
+        ("max", ModelTier.MAX),
+        ("high", ModelTier.MAX),
+        ("light", ModelTier.LIGHT),
+    ]
+
+    MODE_INTENT_PATTERN = re.compile(
+        r"\b(switch|change|go|set|move|shift|put me|use)\b.{0,20}\bmode\b"
+        r"|\bmode\b.{0,20}\b(switch|change|go|set|move|shift)\b",
+        re.IGNORECASE,
+    )
 
     STATUS_PHRASES = {"what model", "which model", "what mode are you in", "current model", "which mode"}
 
@@ -470,25 +479,13 @@ class ModelModeController:
         self.router = router
         if router.load(initial):
             return
-        
         log_error(f"Could not load startup tier {initial.value}; falling back to {ModelTier.LIGHT.value}")
-        
         if not router.load(ModelTier.LIGHT):
             raise RuntimeError(f"Could not load fallback tier {ModelTier.LIGHT.value} either.")
 
     @property
     def tier(self) -> ModelTier:
         return self.router.current_tier
-
-    def _normalize(self, utterance: str) -> Optional[str]:
-        lowered = utterance.strip().lower()
-        if lowered.startswith("/model"):
-            lowered = lowered.replace("/model", "").strip()
-        elif lowered.startswith("switch to "):
-            lowered = lowered[len("switch to "):].strip()
-        elif lowered.startswith("use "):
-            lowered = lowered[len("use "):].strip()
-        return lowered
 
     def is_status_query(self, utterance: str) -> bool:
         return utterance.strip().lower() in self.STATUS_PHRASES
@@ -497,23 +494,33 @@ class ModelModeController:
         return f"I'm currently running in {self.tier.value} mode."
 
     def process(self, utterance: str) -> Optional[str]:
-        lowered = self._normalize(utterance)
-        if lowered not in self.PHRASE_TO_TIER:
+        lowered = re.sub(r"[.,!?;:]+$", "", utterance.strip().lower()).strip()
+
+        if not self.MODE_INTENT_PATTERN.search(lowered):
             return None
 
-        requested = self.PHRASE_TO_TIER[lowered]
+        requested = None
+        for phrase, tier in self.TIER_KEYWORDS:
+            if re.search(rf"\b{re.escape(phrase)}\b", lowered):
+                requested = tier
+                break
+
+        if requested is None:
+            log_info(f"[ModeSwitch] Intent detected but no tier keyword matched: {lowered!r}")
+            return None
+
+        log_info(f"[ModeSwitch] Parsed intent -> {requested.value} (from: {lowered!r})")
+
         if requested == self.tier:
             return f"Already in {requested.value} mode."
 
         if self.router.load(requested):
             log_success(f"Model tier switched to {requested.value}")
             return f"Switched to {requested.value} mode."
-        else:
-            return (
-                f"Couldn't switch to {requested.value} mode — cloud model unreachable. "
-                f"Staying on {self.tier.value} mode."
-            )
-
+        return (
+            f"Couldn't switch to {requested.value} mode — couldn't load that backend. "
+            f"Staying on {self.tier.value} mode."
+        )
 
 # ------------------------
 # TEXT / VOICE INPUT MODE
@@ -562,7 +569,6 @@ else:
     _tts_pipeline = None
 
 TTS_RATE = 24_000
-INTERRUPT_RMS_THRESHOLD = SILENCE_THRESHOLD * 3.0
 MIC_BLOCK_SIZE = 512
 _interrupt_event = threading.Event()
 
@@ -627,14 +633,33 @@ def resample_audio(audio: np.ndarray, orig_sr: int, target_sr: int) -> np.ndarra
     return ((1 - frac) * audio[left] + frac * audio[right]).astype(audio.dtype)
 
 
-def _mic_rms_monitor(stop_event: threading.Event) -> None:
+def _mic_rms_monitor(stop_event: threading.Event, warmup_until: list) -> None:
+    consecutive_over = 0
+
     def _callback(indata, frames, time_info, status):
+        nonlocal consecutive_over
         if stop_event.is_set():
             raise sd.CallbackStop()
-        rms = float(np.sqrt(np.mean(indata ** 2)))
+
+        mic_block = indata[:, 0] if indata.ndim > 1 else indata
+
+        cleaned = echo_canceller.process_mic_frame(mic_block)
+        if cleaned.size == 0:
+            return
+        
+        if time.monotonic() < warmup_until[0]:
+            consecutive_over = 0
+            return
+
+        rms = float(np.sqrt(np.mean(cleaned ** 2)))
         if rms > INTERRUPT_RMS_THRESHOLD:
-            _interrupt_event.set()
-            raise sd.CallbackStop()
+            consecutive_over += 1
+            if consecutive_over >= INTERRUPT_SUSTAIN_BLOCKS:
+                _interrupt_event.set()
+                raise sd.CallbackStop()
+        else:
+            consecutive_over = 0
+
     try:
         with sd.InputStream(samplerate=SAMPLE_RATE, channels=1, dtype="float32",
                      blocksize=MIC_BLOCK_SIZE, device=0, callback=_callback):
@@ -656,15 +681,18 @@ def speak_interruptible(text: str) -> bool:
 
     _interrupt_event.clear()
     stop_monitor = threading.Event()
-    monitor = threading.Thread(target=_mic_rms_monitor, args=(stop_monitor,), daemon=True)
+    warmup_until = [time.monotonic() + INTERRUPT_WARMUP_SECONDS]
+    monitor = threading.Thread(target=_mic_rms_monitor, args=(stop_monitor, warmup_until), daemon=True)
+
+    echo_canceller.start_reference_stream()
     monitor.start()
 
     sd.stop()
     time.sleep(0.05)
-    
-    # Pre-select a valid output device to avoid PortAudio errors
+
     safe_device = select_audio_device(sd, kind="output")
-    
+    dev_rate = get_device_default_rate(sd, safe_device, fallback=TTS_RATE)
+
     try:
         for sentence in re.split(r"(?<=[.!?])\s+", text):
             sentence = sentence.strip()
@@ -672,30 +700,34 @@ def speak_interruptible(text: str) -> bool:
                 continue
             for _, _, audio in _tts_pipeline(sentence, voice="af_heart", speed=1.3):
                 samples = np.array(audio[0], dtype=np.float32)
-                try:
-                    dev_info = sd.query_devices(safe_device, "output") if safe_device is not None else {}
-                    dev_rate = int(dev_info.get("default_samplerate", TTS_RATE))
-                except Exception:
-                    dev_rate = TTS_RATE
+
+                echo_canceller.push_reference(samples, source_sr=TTS_RATE)
+
                 if dev_rate != TTS_RATE:
                     samples = resample_audio(samples, TTS_RATE, dev_rate)
+
+                warmup_until[0] = time.monotonic() + INTERRUPT_WARMUP_SECONDS
+
                 try:
                     play_audio(sd, samples, dev_rate, device_index=safe_device)
                 except Exception as e:
                     log_error(f"play_audio failed: {e}")
+                    safe_device = select_audio_device(sd, kind="output")
+                    dev_rate = get_device_default_rate(sd, safe_device, fallback=TTS_RATE)
+
                 if _interrupt_event.is_set():
                     return True
     except Exception as e:
         log_error(f"speak_interruptible: {e}")
         sd.stop()
     finally:
+        echo_canceller.stop_reference_stream()
         stop_monitor.set()
         monitor.join(timeout=1.0)
         sd.stop()
         interrupted = _interrupt_event.is_set()
         _interrupt_event.clear()
     return interrupted
-
 
 # ----
 # STT
@@ -955,10 +987,22 @@ def detect_and_apply_fact_updates(user_message: str):
 FORCE_SEARCH_PATTERNS = [
     r"\b(world cup|premier league|champions league|nba|nfl)\b",
     r"\b(score|standings|match|tournament|who (won|is winning|is leading))\b",
-    r"\b(price|stock|weather|news|latest|current|right now|today)\b",
-    r"\b(born on|birthday|who is|how old is|when did|what year)\b",
-    r"\b(travel time|distance|travel|cost)\b",
+    r"\b(stock price|share price|exchange rate)\b",
+    r"\b(weather (in|today|tomorrow|forecast)|breaking news|latest news)\b",
+    r"\b(born on|birthday|who is|how old is|when did|what year (was|did))\b",
+    r"\b(travel time|how far is|distance (from|between|to))\b",
 ]
+
+SELF_REFERENTIAL_PATTERNS = [
+    r"\byou(r|'re| are)?\b.{0,25}\b(feel|feeling|version|upgrad\w*|updat\w*|mood|status|doing)\b",
+    r"\bhow are you\b",
+    r"\bwhat (version|model|mode) are you\b",
+    r"\bare you (upgraded|updated|new|different|okay|working)\b",
+]
+
+def is_self_referential(text: str) -> bool:
+    t = text.lower()
+    return any(re.search(p, t) for p in SELF_REFERENTIAL_PATTERNS)
 
 def _query_hash(query: str) -> str:
     return hashlib.md5(query.strip().lower().encode()).hexdigest()
@@ -1495,7 +1539,8 @@ Examples of tool calls:
 
 Examples of plain text (NO tool call):
 - "hey how are you" -> respond conversationally
-- "what is the capital of France" -> answer directly (stable, non-time-sensitive fact)"""
+- "what is the capital of France" -> answer directly (stable, non-time-sensitive fact)
+"""
 
 
 def build_system_prompt(global_context: str, semantic_context: list[str], tier: ModelTier) -> str:
@@ -1648,9 +1693,11 @@ def process_query(transcription: str, stt_ms: float) -> Optional[bool]:
 
     system_prompt = build_system_prompt(global_context, semantic_hits, model_ctrl.tier)
 
-    force_search = any(re.search(p, transcription.lower()) for p in FORCE_SEARCH_PATTERNS)
+    force_search = (not is_self_referential(transcription)) and any(
+        re.search(p, transcription.lower()) for p in FORCE_SEARCH_PATTERNS
+    )
     if force_search:
-        log_info("Force search triggered.")
+        log_info(f"Force search triggered by pattern match on: {transcription!r}")
         final_response = sanitize_response(do_web_search(transcription, transcription))
     else:
         tier_before = model_ctrl.tier

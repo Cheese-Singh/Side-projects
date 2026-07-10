@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import time
 from typing import Any, Optional
 
 import numpy as np
@@ -67,12 +68,47 @@ def select_audio_device(sounddev: Any, kind: str = "output") -> Optional[int]:
     return None
 
 
-def play_audio(sounddev: Any, audio: np.ndarray, sample_rate: int, device_index: Optional[int] = None, blocking: bool = True) -> bool:
-    """Play audio with fallback device and sample rate selection."""
+def get_device_default_rate(sounddev: Any, device_index: Optional[int], fallback: int) -> int:
+    if device_index is None:
+        return fallback
+    try:
+        info = sounddev.query_devices(device_index, "output")
+        rate = info.get("default_samplerate")
+        if rate:
+            return int(round(float(rate)))
+    except Exception:
+        pass
+    return fallback
+
+_DEVICE_SETTLE_SECONDS = 0.03
+
+_last_stop_time: float = 0.0
+
+
+def _settle_after_stop() -> None:
+    global _last_stop_time
+    elapsed = time.monotonic() - _last_stop_time
+    if elapsed < _DEVICE_SETTLE_SECONDS:
+        time.sleep(_DEVICE_SETTLE_SECONDS - elapsed)
+
+
+def _mark_stopped() -> None:
+    global _last_stop_time
+    _last_stop_time = time.monotonic()
+
+
+def play_audio(
+    sounddev: Any,
+    audio: np.ndarray,
+    sample_rate: int,
+    device_index: Optional[int] = None,
+    blocking: bool = True,
+) -> bool:
     if audio is None or np.size(audio) == 0:
         return False
 
     audio = np.asarray(audio, dtype=np.float32)
+
     candidate_devices = []
     if device_index is not None:
         candidate_devices.append(device_index)
@@ -81,26 +117,24 @@ def play_audio(sounddev: Any, audio: np.ndarray, sample_rate: int, device_index:
         candidate_devices.append(selected_device)
     candidate_devices.append(None)
 
-    candidate_rates = [int(sample_rate)]
-    if sample_rate != 48000:
-        candidate_rates.append(48000)
-    if sample_rate != 44100:
-        candidate_rates.append(44100)
-    if sample_rate != 24000:
-        candidate_rates.append(24000)
-    if sample_rate != 16000:
-        candidate_rates.append(16000)
-
     last_error: Optional[Exception] = None
-    
+
     for dev_idx in candidate_devices:
+        device_default = get_device_default_rate(sounddev, dev_idx, fallback=int(sample_rate))
+        candidate_rates = []
+        for r in (device_default, int(sample_rate), 48000, 44100, 24000, 16000):
+            if r not in candidate_rates:
+                candidate_rates.append(r)
+
         for rate in candidate_rates:
             try:
                 try:
                     sounddev.stop()
                 except Exception:
                     pass
-                
+                _mark_stopped()
+                _settle_after_stop()
+
                 if dev_idx is None:
                     sounddev.play(audio, samplerate=rate)
                 else:
@@ -114,6 +148,7 @@ def play_audio(sounddev: Any, audio: np.ndarray, sample_rate: int, device_index:
                     sounddev.stop()
                 except Exception:
                     pass
+                _mark_stopped()
 
     if last_error is not None:
         raise last_error
