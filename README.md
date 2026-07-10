@@ -23,8 +23,11 @@ A collection of technical explorations and utility scripts.
   - `A12_new_additions.py` → Includes individual tools that will be added onto A11_Gwen for the final prototype. Includes smoother beep sounds, new activation phrases, voice-text mode switches, and interrupting Gwen for more natural to-and-fro conversations.
   - `A13_file_generation_and_reading.py` → Includes image, pdf, word document generation and reading capabilities. Will be added onto A11_Gwen in the final version.
   - `A14_VoiceGate.py`, `A14_VoiceGate_session.py` → Uses sounddevice and soundfile to store voice inputs. Also uses speechbrain for SpeakerRecognition.
-  - `A15_Four_Tier.py` → Uses Ollama to integrate larger LLMs through cloud for deeper, well-sought responses. Introduces a 4-tier model architecture, featuring a very light model (Qwen2.5:1.5B), light model (Qwen3.5:9B), regular/default model (Gemma4b:cloud), and a MAX model (kimi-k2.7-code:cloud). 
-* **Stack:** `mlx`, `mlx-vlm`, `mlx-audio`, `mlx-whisper`, `transformers`, `torch`, `pyaudio`, `python`, `whisper`, `sounddevice`, `soundfile`, `beautifulsoup4`, `requests`, `ddgs`, `mflux`, `fitz`, `speechbrain`, `ollama`
+  - `A15_Four_Tier.py` → Uses Ollama to integrate larger LLMs through cloud for deeper, well-sought responses. Introduces a 4-tier model architecture, featuring a very light model (Qwen2.5:1.5B), light model (Qwen3.5:9B), regular/default model (Gemma4b:cloud), and a MAX model (kimi-k2.7-code:cloud).
+  - `A15_Super_Gwen.py` → Consolidated Gwen build integrating the four-tier model architecture, speaker verification, multimodal I/O, and refined persona/identity, using `aec_processor.py` for echo-cancelled mic input and `audio_utils.py` for reliable audio playback.
+  - `aec_processor.py` → Acoustic echo cancellation module wrapping `aec_audio_processing.AudioProcessor` (WebRTC AEC3); handles frame-level resampling, PCM16 conversion, and reference/mic stream buffering, with graceful fallback to raw mic input if AEC3 is unavailable.
+  - `audio_utils.py` → Shared audio I/O helpers: robust output-device selection with fallback probing, sample-rate negotiation per device, and a resilient `play_audio` function that retries across device/rate combinations after stream stops.
+* **Stack:** `mlx`, `mlx-lm`, `mlx-vlm`, `mlx-audio`, `mlx-whisper`, `transformers`, `torch`, `pyaudio`, `python`, `openai-whisper`, `sounddevice`, `soundfile`, `beautifulsoup4`, `requests`, `ddgs`, `mflux`, `fitz`, `speechbrain`, `ollama`
 
 ---
 
